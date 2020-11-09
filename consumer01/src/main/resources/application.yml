@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: demo-consumer-ribbon-test
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.99:5040
+        namespace: cosmosource
+
+server:
+  port: 20888
+
+#  设置Ribbon 客户端的自定义配置
+#  添加{clientName}.ribbon.{key}={value} 配置项，设置指定名字的 Ribbon 客户端的指定属性的值
+#  更多 Ribbon 配置项的 KEY，可以查看 CommonClientConfigKey 类。
+# （https://github.com/Netflix/ribbon/blob/master/ribbon-core/src/main/java/com/netflix/client/config/CommonClientConfigKey.java）
+#  NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#demo-provider:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡规则全类名
+# 如果该属性是动态更改的，则负载平衡器的服务器列表也将更改。
+#    listOfServers: www.microsoft.com:80,www.yahoo.com:80,www.google.com:80 #服务器列表

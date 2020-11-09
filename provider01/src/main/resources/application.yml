@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: cosmo-demoprovider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.0.99:5040
+        namespace: cosmosource
+
+server:
+  port: ${random.int[3000,10000]}
+#  port: 18080  # 服务器端口。默认为 8080

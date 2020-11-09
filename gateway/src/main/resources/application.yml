@@ -1,0 +1,61 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: gateway-demo
+
+  cloud:
+    # Spring Cloud Gateway 配置项，对应 GatewayProperties 类
+    gateway:
+      routes:
+        # ========================================================================
+        - id: oschina # 路由的编号
+          uri: https://www.oschina.net # 路由的目标地址
+          predicates: # 断言，作为路由的匹配条件，对应 RouteDefinition 数组
+            - Path=/oschina
+          filters: # 过滤器，对请求进行拦截，实现自定义的功能，对应 FilterDefinition 数组
+            - StripPrefix=1
+      # ==============================================================================
+#        - id: ReactiveCompositeDiscoveryClient_user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/user-service/**
+#          filters:
+#            - RewritePath=/user-service/(?<remaining>.*), /${remaining} # 将 /user-service 前缀剔除
+#        - id: ReactiveCompositeDiscoveryClient_order-service
+#          uri: lb://order-service
+#          predicates:
+#            - Path=/order-service/**
+#          filters:
+#            - RewritePath=/order-service/(?<remaining>.*), /${remaining} # 将 /order-service 前缀剔除
+      # ==============================================================================================
+      # 与 Spring Cloud 注册中心的集成，对应 DiscoveryLocatorProperties 类
+      discovery:
+        locator:
+          enabled: true # 是否开启，默认为 false 关闭
+          url-expression: "'lb://' + serviceId"
+          # 路由的目标地址的表达式，默认为 "'lb://' + serviceId"
+          #url-expression：路由的目标地址的 Spring EL 表达式，默认为 "'lb://' + serviceId"。这里，我们设置的就是默认值。
+          #lb:// 前缀，表示将请求负载均衡转发到对应的服务的实例。
+          #"'lb://' + serviceId" Spring EL 表达式，将从注册中心获得到的服务列表，每一个服务的名字对应 serviceId，最终使用 Spring EL 表达式进行格式化。
+
+    # Nacos 作为注册中心的配置项
+    nacos:
+      discovery:
+        server-addr: 192.168.0.99:5040 # Nacos 服务器地址
+        namespace: cosmosource
+#  设置Ribbon 客户端的自定义配置
+#  添加{clientName}.ribbon.{key}={value} 配置项，设置指定名字的 Ribbon 客户端的指定属性的值
+#  更多 Ribbon 配置项的 KEY，可以查看 CommonClientConfigKey 类。
+# （https://github.com/Netflix/ribbon/blob/master/ribbon-core/src/main/java/com/netflix/client/config/CommonClientConfigKey.java）
+#  NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#user-service:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡规则全类名
+# 如果该属性是动态更改的，则负载平衡器的服务器列表也将更改。
+#    listOfServers: 192.168.2.31:14368,192.168.2.31:19701,192.168.2.31:10196 #服务器列表
+cosmo-demoprovider:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    listOfServers: 192.168.2.24:7650,192.168.2.24:4264
